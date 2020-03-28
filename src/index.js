@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import { key } from "./key.js";
 import * as serviceWorker from "./serviceWorker";
 
 class MyComponent extends React.Component {
@@ -12,7 +13,18 @@ class MyComponent extends React.Component {
       diff: [],
       items: [],
       name: [],
-      stocks: ["AAPL", "FB", "SBUX", "NKE", "NFLX", "DAL", "ALK", "LUV", "EXPE", "MAR"]
+      stocks: [
+        "AAPL",
+        "FB",
+        "SBUX",
+        "NKE",
+        "NFLX",
+        "DAL",
+        "ALK",
+        "LUV",
+        "EXPE",
+        "MAR"
+      ]
     };
   }
 
@@ -24,9 +36,7 @@ class MyComponent extends React.Component {
   }
 
   loadCommitHistory(stock) {
-    fetch(
-      `https://finnhub.io/api/v1/quote?symbol=${stock}&token=bpv28t7rh5rabkt30r7g`
-    )
+    fetch(`https://finnhub.io/api/v1/quote?symbol=${stock}&token=${key}`)
       .then(res => res.json())
       .then(
         result => {
@@ -52,7 +62,7 @@ class MyComponent extends React.Component {
 
   possibility(curr, low) {
     const res = (((curr - low) * 100) / curr).toFixed(2);
-    return (res)
+    return res;
   }
 
   render() {
@@ -64,15 +74,22 @@ class MyComponent extends React.Component {
     } else {
       return (
         <div>
-        {items.map((val, index) => (<ul>
-          <h4>{name[index]}:</h4>Current: {val.c}, Lowest: {val.l}, Highest: {val.h}, <div className={this.possibility(val.c, val.l) >2 ? "red":"green"}>Difference: {this.possibility(val.c, val.l)}%</div>
-        </ul>))}
+          {items.map((val, index) => (
+            <ul>
+              <h4>{name[index]}:</h4>Current: {val.c}, Lowest: {val.l}, Highest:{" "}
+              {val.h},{" "}
+              <div
+                className={this.possibility(val.c, val.l) > 2 ? "red" : "green"}
+              >
+                Difference: {this.possibility(val.c, val.l)}%
+              </div>
+            </ul>
+          ))}
         </div>
       );
     }
   }
 }
-
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<MyComponent />, rootElement);
